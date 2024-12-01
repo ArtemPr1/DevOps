@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: C:\Users\artem\devops\lab1\back  # Путь к бэкенду
+      dockerfile: Dockerfile
+    container_name: backend_service
+    networks:
+      - app_network
+    volumes:
+      - ./lab1/back/data.txt:/app/data.txt  # Сохранение данных на хосте
+    ports:
+      - "5000:5000"  # Проброс порта 5000 на хост
+    restart: always
+
+  frontend:
+    build:
+      context: C:\Users\artem\devops\lab1\front  # Путь к фронтенду
+      dockerfile: Dockerfile
+    container_name: frontend_service
+    depends_on:
+      - backend  # Зависимость от бэкенда
+    networks:
+      - app_network
+    ports:
+      - "80:80"  # Проброс порта 80 на хост
+    restart: always
+
+networks:
+  app_network:
+    driver: bridge
